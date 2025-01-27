@@ -1,3 +1,4 @@
+
 #include <Servo.h>
 #include <Arduino_FreeRTOS.h>
 
@@ -87,6 +88,5 @@ void setup() {
 String voice;
 
 void loop() {
-  //deep
 
 }
