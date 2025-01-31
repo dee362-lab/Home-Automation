@@ -1,11 +1,14 @@
-#include <Servo.h>
+#include <ESP32Servo.h>
 #include <Arduino.h>
 #include <WiFi.h>
 #include<WiFiClient.h>
 #include <NTPClient.h>
 #include<WiFiUdp.h>
 #include <DHT.h>
-#include <HTTPClient>
+#include <HTTPClient.h>
+#include "esp_task_wdt.h"
+
+
 
 
 
@@ -21,8 +24,8 @@ const char* server="asia.pool.ntp.org";
 const long interval=6000;
 
 //creat the objects
-WiFiUdp ntpudp;
-NTPClient timeclient(ntpudp,server,offset,intervel);
+WiFiUDP ntpudp;
+NTPClient timeclient(ntpudp,server,offset,interval);
 DHT dht(4, DHT22);
 Servo door;
 HTTPClient http;
@@ -31,47 +34,15 @@ HTTPClient http;
 
 const char *name="Wokwi-GUEST";
 const char *password="";
-const char *serverURL="http://127.0.0.1:5000/data";
+const char *serverURL="http://192.168.56.1:5000/data";
 
 //for locking the door
 int currentTime;
 int preTime=0;
 int thesh=10;
 int motion;
-
-
+bool doorlock=false;
  
-/*
-//creat task for the bluetooth functin 
-void BluetoothTask(void* pvParameter){
-  (void)pvParameter;
-
-  while(1){
-   if( Serial.available()){
-    String command=Serial.readStringUntil('\n');
-    command.trim();
-    Serial.println("command: "+command);
-  if(command.equalsIgnoreCase("Turn on light")){
-    digitalWrite( led, HIGH);}
-  if(command.equalsIgnoreCase("Turn off light")){
-    digitalWrite( led, LOW);}
-  if(command.equalsIgnoreCase("Turn on fan")){
-    digitalWrite( fan, HIGH);}
-  if(command.equalsIgnoreCase("Turn off fan")){
-    digitalWrite( fan, LOW);}
-  if(command.equalsIgnoreCase("opoen the door")){
-    lockDoor();}
-  if(command.equalsIgnoreCase("close the door")){
-    unlockDoor();
-  
-   }
-  }
-  vTaskDelay(pdMS_TO_TICKS(100));
-  }
-}
-
-
-*/  
 void autolock(void* pvParameter){
   (void)pvParameter;
   while(1){
@@ -83,8 +54,11 @@ void autolock(void* pvParameter){
     if(!doorlock && currentTime-preTime>=interval){
       lockDoor();
       preTime=currentTime;
+      doorlock=true;
+      Serial.println("door locked");
     }
-    vTaskDelay(pdMS_TO_TICKS(500));
+    esp_task_wdt_reset(); 
+     vTaskDelay(1000 / portTICK_PERIOD_MS);
   }
 }
 
@@ -119,29 +93,41 @@ void SendData(void* pvParameter){
       String postData = "{\"temperature\":" + String(temperature) +
       ", \"humidity\":" + String(humidity) + "}";
 
+      Serial.println("Sending Data...");
+
       int httpResponseCode = http.POST(postData);
         
       Serial.println("Data Sent: " + postData);
       Serial.println("Server Response: " + String(httpResponseCode));
 
       http.end();
+      Serial.println("send the data");
     } else {
         Serial.println("Wi-Fi not connected!");
     }
+    esp_task_wdt_reset(); 
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
 
   }
   
 }
 
-void recData(void* pvParameter){
-
-}
+//void recData(void* pvParameter){}
 
 void setup() {
   Serial.begin(115200);
   pinMode(LED, OUTPUT);
   pinMode(fan, OUTPUT);
   pinMode(PIR, INPUT);
+ esp_task_wdt_deinit(); 
+
+
+   WiFi.begin(name,password);
+ while(WiFi.status()!=WL_CONNECTED){
+  delay(1000);
+  Serial.println("connectig....");
+ }
+ Serial.println("connected");
   door.attach(servoPin);
   door.write(0);
   dht.begin();
@@ -152,16 +138,13 @@ void setup() {
 
 
  //initilise the wifi 
- WiFi.begin(name,password);
- while(WiFi.status()!=WL_CONNECTED){
-  delay(1000);
-  Serial.println("connectig....");
- }
- Serial.println("connected");
+
 
  //door.attach(servoPin);
- //xTaskCreate(autolock,"autolock",128,NULL,1,NULL);
- //xTaskCreate(BluetoothTask,"bluetoothOperation",128,NULL,1,NULL);
+ xTaskCreate(autolock,"autolock",8192,NULL,1,NULL);
+ xTaskCreate(SendData,"sending data to the server",8192,NULL,1,NULL);
+  Serial.println("Task WDT Debug: Checking active tasks...");
+ vTaskStartScheduler();
  
 }
 
@@ -169,7 +152,6 @@ String voice;
 
 void loop() {
 
-    Serial.println(temperature);
-    Serial.println(humidity);
+
 
     }
