@@ -1,40 +1,45 @@
-🏡 Smart Home Automation System
-📌 Project Overview
-This project is an IoT-based Home Automation System using ESP32, allowing users to control home appliances (lights, fan, and door lock) via a mobile app. The system supports real-time monitoring and features automatic door locking after a set time.
+# 🏡 Smart Home Automation System  
 
-🔥 Features
-✔️ Remote Control – Manage lights, fan, and door lock via a mobile app.
-✔️ Wi-Fi Connectivity – ESP32 enables seamless IoT integration.
-✔️ Real-time Monitoring – Get live updates on device status.
-✔️ Automated Door Locking – Enhances security by auto-locking after a set time.
-✔️ Scalable & Modular – Can be expanded with additional devices.
+## 📖 Table of Contents  
+- [Overview](#-overview)  
+- [Technologies Used](#-technologies-used)  
+- [Features](#-features)  
+- [Circuit Diagram](circuit.png)  
+- [Setup & Installation](#-setup--installation)  
+- [How It Works](#-how-it-works)  
+- [License](#-license)  
 
-🛠️ Hardware & Software Requirements
-🔌 Hardware Components:
-ESP32 – Microcontroller with Wi-Fi
-DHT22 – Temperature & humidity sensor
-PIR Sensor – Motion detection
-Relay Module – Controls appliances
-Servo Motor – Door lock mechanism
-LEDs – Representing light and fan
-🖥️ Software & Tools:
-Arduino IDE – For programming ESP32
-Flask – Laptop server setup for communication
-Wokwi Simulator – Testing and simulation
-Mobile App – Custom-built for user control
-🔗 How It Works
-1️⃣ The ESP32 connects to Wi-Fi and communicates with the Flask server on a laptop.
-2️⃣ The mobile app sends control signals to the server.
-3️⃣ The server processes the request and forwards commands to ESP32.
-4️⃣ The ESP32 controls the fan, light, and door lock accordingly.
-5️⃣ The system also monitors temperature, humidity, and motion detection for automation.
+## 🔍 Overview  
+This **Smart Home Automation System** is designed to remotely control household appliances using an **ESP32** with **Wi-Fi connectivity**. The system integrates **RTOS and IoT** to efficiently manage a **fan, light, and door lock**. The automation is enhanced by **sensor-based controls and a mobile app interface**, making the system user-friendly and scalable.  
 
-📷 Circuit Diagram & Demo
-📌 (Add a circuit diagram screenshot and demo GIF here)
+## 🛠️ Technologies Used  
+- **Microcontroller:** ESP32  
+- **Sensors:** DHT22 (temperature & humidity), PIR sensor  
+- **Actuators:** Relay Module (for appliances), Servo Motor (for door lock)  
+- **Software:** Arduino IDE, Flask (Python for server), Wokwi Simulator  
 
-🔧 Setup & Installation
-Connect the hardware components as per the circuit diagram.
-Upload the ESP32 firmware using Arduino IDE.
-Set up the Flask server on your laptop.
-Configure the mobile app to communicate with the server.
-Start the system and control devices remotely!
+## 🚀 Features  
+- ✅ **Remote Control:** Manage home appliances via a mobile app  
+- ✅ **Real-time Monitoring:** Get live updates on room temperature and motion detection  
+- ✅ **Wi-Fi Integration:** ESP32 communicates with a **Flask-based laptop server**  
+- ✅ **Automatic Door Locking:** The door locks itself after a predefined time  
+- ✅ **User-Friendly UI:** Easily control devices through an intuitive interface  
+- ✅ **Modular & Expandable:** Add more sensors or appliances as needed  
+
+
+
+## 🔧 Setup & Installation  
+1. **Hardware Setup:** Connect the ESP32, sensors, relay module, and servo motor as per the circuit diagram.  
+2. **Firmware Upload:** Install the required **ESP32 board package** in **Arduino IDE**, then upload the firmware.  
+3. **Flask Server Setup:**  
+   - Install Python and Flask on your laptop.  
+   - Run the Flask server to manage communication between ESP32 and the mobile app.  
+4. **Mobile App Configuration:** Configure the app to send and receive control commands via Wi-Fi.  
+5. **Run the System:** Power on the ESP32, connect it to Wi-Fi, and start managing appliances remotely.  
+
+## ⚙️ How It Works  
+1. **User sends a command via a mobile app.**  
+2. **ESP32 receives the command through Wi-Fi** and activates/deactivates the respective appliance.  
+3. **Flask server acts as a bridge**, processing commands and updating the UI.  
+4. **Sensor data is sent back** to the mobile app for real-time monitoring.  
+5. **Door lock automation ensures security** by auto-locking after a set time.  
