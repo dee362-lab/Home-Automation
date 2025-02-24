@@ -7,7 +7,7 @@
 - [Circuit Diagram](circuit.png)  
 - [Setup & Installation](#-setup--installation)  
 - [How It Works](#-how-it-works)  
-- [License](#-license)  
+  
 
 ## 🔍 Overview  
 This **Smart Home Automation System** is designed to remotely control household appliances using an **ESP32** with **Wi-Fi connectivity**. The system integrates **RTOS and IoT** to efficiently manage a **fan, light, and door lock**. The automation is enhanced by **sensor-based controls and a mobile app interface**, making the system user-friendly and scalable.  
